@@ -12,14 +12,14 @@ cam = Cam_params() # type: ignore
 """拍攝流程：開燈 - 拍攝 - 關燈"""
 def main():
     light = type('LightSource', (object,), {})()
-    # light_on(light, 'COM4')
+    light_on(light, 'COM4')
     capture_sequence()
     # cam.Connect()
     # cam.Scan()
     # cam.Snap()
     # cam.Cycle()
     # cam.Read()
-    # light_off()
+    light_off(light)
     
 """控制光源開啟"""
 def light_on(light, port):
@@ -65,14 +65,14 @@ def capture_sequence():
 
     # 這邊排程各組的拍攝參數，會導入cam的C#程式裡
     # 注意lineRate、exposureTime、gain三個list的elements數量要相同
-    lineRate_seq = [1000, 1000, 1000, 600, 300, 300]
-    exposureTime_seq = [4, 30, 200, 1500, 3000, 3000]
-    gain_seq = [1, 1, 1, 1, 1, 10.0]
+    # lineRate_seq = [1000, 1000, 1000, 600, 300, 300]
+    # exposureTime_seq = [4, 30, 200, 1500, 3000, 3000]
+    # gain_seq = [1, 1, 1, 1, 1, 10.0]
     
     # # 測試用快速參數
-    # lineRate_seq = [1000]
-    # exposureTime_seq = [200]
-    # gain_seq = [1]
+    lineRate_seq = [1000]
+    exposureTime_seq = [200]
+    gain_seq = [1]
     
     # speed_seq = [5.7 * lineRate * 7.04 * (10**-3) for lineRate in lineRate_seq] # With len
     speed_seq = [2 * lineRate * 7.04 * (10**-3) for lineRate in lineRate_seq] # BIN2

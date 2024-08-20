@@ -23,7 +23,7 @@ namespace Cam_control
         private static double gain;
         
         private static string pixelFormat = "Mono12"; // 設定影像深度
-        private static int height = 50; // 設定影像高度
+        private static int height = 7997; // 設定影像高度
         private static string configFilePath = @"C:\Program Files\Teledyne DALSA\Sapera\CamFiles\User\T_Linea_M8192-7um_Default_Default.ccf"; //指定.ccf檔，ccf檔建議用CamExpert產生
         //private static double wait = (1 + (height / lineRate)); // 計算ImageTimout，為拍攝時間+1秒
 
