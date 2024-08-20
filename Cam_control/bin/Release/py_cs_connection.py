@@ -2,7 +2,6 @@ import clr
 from zaber_motion import Units
 from zaber_motion.ascii import Connection
 import serial
-import threading
 
 """引入控制相機的C#函式庫"""
 dll_path = r"C:/Users/9288/Desktop/Cam_control/Cam_control/bin/Release/Cam_control.dll" # 設定DLL的路徑
