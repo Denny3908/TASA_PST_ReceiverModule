@@ -13,16 +13,17 @@ namespace Cam_control
         private static string serverName = "Linea_M8192-7um_1"; // 裝置 serverName 在這裡設定，換相機才需要改
         // private static string ffcFile = @"C:\Users\9288\Desktop\Cam_control\Linea_M8192-7um_FlatFieldCoefficients0.tif"; // 指定 FFC 的 tif 檔
         private string imageSavedPath = @"C:\Users\9288\Desktop\Cam_image\"; // 指定影像儲存位置
+        
         //private static double lineRate = 100; // Line Rate 設定，單位 Hz
-        //private double exposureTime = 150; // 曝光時間在這裡設定，單位us
-        //private double gain = 10.0; // Gain 在這邊設定，範圍是 1.0~10.0
+        //private double exposureTime = 4; // 曝光時間在這裡設定，單位us
+        //private double gain = 1; // Gain 在這邊設定，範圍是 1.0~10.0
         
         private static double lineRate;
         private static double exposureTime;
         private static double gain;
         
         private static string pixelFormat = "Mono12"; // 設定影像深度
-        private static int height = 7997; // 設定影像高度
+        private static int height = 50; // 設定影像高度
         private static string configFilePath = @"C:\Program Files\Teledyne DALSA\Sapera\CamFiles\User\T_Linea_M8192-7um_Default_Default.ccf"; //指定.ccf檔，ccf檔建議用CamExpert產生
         //private static double wait = (1 + (height / lineRate)); // 計算ImageTimout，為拍攝時間+1秒
 
@@ -151,6 +152,10 @@ namespace Cam_control
         {
             Console.WriteLine("Sapera 8k Line Scan Camera control, TASA project.");
 
+            lineRate = 100;
+            gain = 1;
+            exposureTime = 4;
+
             // Create camera object，並連線（可以同時參考Sapera Status Dialog確認相機狀態）
             acqDevice = new SapAcqDevice(location, configFilePath);
 
@@ -181,6 +186,8 @@ namespace Cam_control
             Console.WriteLine("\nPress any key to start setting.");
             Console.ReadKey();
 
+
+            wait = (2 + (height / lineRate));
             //設定各種相機參數
             acqDevice.SetFeatureValue("AcquisitionLineRate", lineRate); //LineRate如果要用ccf檔的話只能在ccf先設好
             acqDevice.SetFeatureValue("ExposureTime", exposureTime);
@@ -188,34 +195,30 @@ namespace Cam_control
             acqDevice.SetFeatureValue("PixelFormat", pixelFormat);
             acqDevice.SetFeatureValue("Height", height);
             acqDevice.SetFeatureValue("ImageTimeout", wait);
-            acqDevice.SetFeatureValue("imageTimeoutEnable", false);
             acqDevice.SetFeatureValue("BinningHorizontal", 2);
 
             //並顯示
             double m_lineRate, m_exposureTime, m_gain, m_height, m_imageTimeout; string m_pixelFormat;
-            int m_imageTimeoutEnable;
             acqDevice.GetFeatureValue("AcquisitionLineRate", out m_lineRate);
             acqDevice.GetFeatureValue("ExposureTime", out m_exposureTime);
             acqDevice.GetFeatureValue("Gain", out m_gain);
             acqDevice.GetFeatureValue("PixelFormat", out m_pixelFormat);
             acqDevice.GetFeatureValue("Height", out m_height);
             acqDevice.GetFeatureValue("ImageTimeout", out m_imageTimeout);
-            acqDevice.GetFeatureValue("BinningHorizontal", out m_imageTimeoutEnable);
 
             Console.WriteLine(
                 "\nLine Rate = " + m_lineRate + "Hz" +
                 "\nExposure Time = " + m_exposureTime + "us" +
                 "\nGain = " + m_gain +
                 "\nPixel Format = " + m_pixelFormat + 
-                "\nImageTimeout = " + m_imageTimeout + "s" +
-                "\nImageTimeoutEnable = " + m_imageTimeoutEnable
+                "\nImageTimeout = " + m_imageTimeout + "s"
                 );
 
             Console.WriteLine("\nPress any key to trigger.");
             Console.ReadKey();
             Console.WriteLine("Capturing...");
 
-            buffer = new SapBuffer(3, acqDevice, SapBuffer.MemoryType.ScatterGather);
+            buffer = new SapBuffer(2, acqDevice, SapBuffer.MemoryType.ScatterGather);
             if (!buffer.Create())
             {
                 Console.WriteLine("Error during Buffer creation.");
@@ -253,6 +256,10 @@ namespace Cam_control
         {
             Console.WriteLine("Sapera 8k Line Scan Camera control, TASA project.");
 
+            lineRate = 100;
+            gain = 1;
+            exposureTime = 4;
+
             // 創建相機對象並連接
             acqDevice = new SapAcqDevice(location);
             if (!acqDevice.Create())
@@ -276,15 +283,16 @@ namespace Cam_control
             Console.ReadKey();
             Console.WriteLine("Capturing...");
 
+            wait = (2 + (height / lineRate));
             // 設定不變的相機參數
-            acqDevice.SetFeatureValue("AcquisitionLineRate", 100);
+            acqDevice.SetFeatureValue("AcquisitionLineRate", lineRate);
             acqDevice.SetFeatureValue("PixelFormat", pixelFormat);
-            acqDevice.SetFeatureValue("Height", 50);
+            acqDevice.SetFeatureValue("Height", height);
             acqDevice.SetFeatureValue("ImageTimeout", wait);
             acqDevice.SetFeatureValue("BinningHorizontal", 2);
 
             // 創建buffer
-            buffer = new SapBuffer(1, acqDevice, SapBuffer.MemoryType.ScatterGather);
+            buffer = new SapBuffer(2, acqDevice, SapBuffer.MemoryType.ScatterGather);
             if (!buffer.Create())
             {
                 Console.WriteLine("Error during Buffer creation.");

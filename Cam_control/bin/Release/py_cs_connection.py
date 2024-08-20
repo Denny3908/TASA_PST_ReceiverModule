@@ -13,9 +13,12 @@ cam = Cam_params() # type: ignore
 def main():
     light = type('LightSource', (object,), {})()
     # light_on(light, 'COM4')
-    capture_sequence()
+    # capture_sequence()
     # cam.Connect()
     # cam.Scan()
+    # cam.Snap()
+    cam.Cycle()
+    cam.Read()
     # light_off()
     
 """控制光源開啟"""
