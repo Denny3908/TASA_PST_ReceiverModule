@@ -40,7 +40,6 @@ def light_off(light):
     light.serial_port.close()
 
 """拍攝序列，包含Camera和Stage"""
-lock = threading.Lock()
 def capture_sequence():
     # 連接到Stage
     connection = Connection.open_serial_port("COM3")
