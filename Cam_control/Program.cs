@@ -11,7 +11,7 @@ namespace Cam_control
         // 全域設定
         
         private static string serverName = "Linea_M8192-7um_1"; // 裝置 serverName 在這裡設定，換相機才需要改
-        private static string ffcFile = @"C:\Users\9288\Desktop\Cam_control\Linea_M8192-7um_FlatFieldCoefficients0.tif"; // 指定 FFC 的 tif 檔
+        // private static string ffcFile = @"C:\Users\9288\Desktop\Cam_control\Linea_M8192-7um_FlatFieldCoefficients0.tif"; // 指定 FFC 的 tif 檔
         private string imageSavedPath = @"C:\Users\9288\Desktop\Cam_image\"; // 指定影像儲存位置
         //private static double lineRate = 100; // Line Rate 設定，單位 Hz
         //private double exposureTime = 150; // 曝光時間在這裡設定，單位us
@@ -28,7 +28,7 @@ namespace Cam_control
 
         private double[] exposureTimeCycle = new double[] {4, 5, 10, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 320, 340, 360, 380, 400, 420, 440, 460, 480, 500, 520, 540, 560, 580, 600, 620, 640, 660, 680, 700, 720, 740, 760, 780, 800, 820, 840, 860, 880, 900, 920, 940, 960, 980, 1000, 1020, 1040, 1060, 1080, 1100, 1120, 1140, 1160, 1180, 1200, 1220, 1240, 1260, 1280, 1300, 1320, 1340, 1360, 1380, 1400, 1420, 1440, 1460, 1480, 1500, 1520, 1540, 1560, 1580, 1600, 1620, 1640, 1660, 1680, 1700, 1720, 1740, 1760, 1780, 1800, 1820, 1840, 1860, 1880, 1900, 1920, 1940, 1960, 1980, 2000, 2020, 2040, 2060, 2080, 2100, 2120, 2140, 2160, 2180, 2200, 2220, 2240, 2260, 2280, 2300, 2320, 2340, 2360, 2380, 2400, 2420, 2440, 2460, 2480, 2500, 2520, 2540, 2560, 2580, 2600, 2620, 2640, 2660, 2680, 2700, 2720, 2740, 2760, 2780, 2800, 2820, 2840, 2860, 2880, 2900, 2920, 2940, 2960, 2980, 3000
 }; // Exposure 的排程設定
-        private double[] gainCycle = new double[] {1.0, 3.0, 5.0, 7.0, 10.0}; // Gain 的排程設定
+        private double[] gainCycle = new double[] {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0}; // Gain 的排程設定
 
         private static SapAcqDevice acqDevice;
         private static SapBuffer buffer;
@@ -189,6 +189,7 @@ namespace Cam_control
             acqDevice.SetFeatureValue("Height", height);
             acqDevice.SetFeatureValue("ImageTimeout", wait);
             acqDevice.SetFeatureValue("imageTimeoutEnable", false);
+            acqDevice.SetFeatureValue("BinningHorizontal", 2);
 
             //並顯示
             double m_lineRate, m_exposureTime, m_gain, m_height, m_imageTimeout; string m_pixelFormat;
@@ -221,7 +222,7 @@ namespace Cam_control
                 return;
             } 
 
-
+            /*
             ffc = new SapFlatField(buffer);
             if (!ffc.Create())
             {
@@ -230,7 +231,7 @@ namespace Cam_control
             }
             ffc.Load(ffcFile);
             ffc.Execute(buffer);
-
+            */
 
             transfer = new SapAcqDeviceToBuf(acqDevice, buffer);
             if (!transfer.Create())
@@ -280,6 +281,7 @@ namespace Cam_control
             acqDevice.SetFeatureValue("PixelFormat", pixelFormat);
             acqDevice.SetFeatureValue("Height", height);
             acqDevice.SetFeatureValue("ImageTimeout", wait);
+            acqDevice.SetFeatureValue("BinningHorizontal", 2);
 
             // 創建buffer
             buffer = new SapBuffer(1, acqDevice, SapBuffer.MemoryType.ScatterGather);
@@ -289,7 +291,8 @@ namespace Cam_control
                 return;
             }
 
-            // 創建ffc
+            // 創建ffc 
+            /*
             ffc = new SapFlatField(buffer);
             if (!ffc.Create())
             {
@@ -298,6 +301,7 @@ namespace Cam_control
             }
             ffc.Load(ffcFile);
             ffc.Execute(buffer);
+            */
 
             // 創建transfer
             transfer = new SapAcqDeviceToBuf(acqDevice, buffer);
