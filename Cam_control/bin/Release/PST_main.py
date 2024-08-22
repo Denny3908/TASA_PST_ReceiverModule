@@ -2,6 +2,7 @@ import clr
 from zaber_motion import Units
 from zaber_motion.ascii import Connection
 import serial
+from fanucpy import Robot
 
 """引入控制相機的C#函式庫"""
 dll_path = r"C:/Users/9288/Desktop/Cam_control/Cam_control/bin/Release/Cam_control.dll" # 設定DLL的路徑
@@ -11,16 +12,48 @@ cam = Cam_params() # type: ignore
 
 """拍攝流程：開燈 - 拍攝 - 關燈"""
 def main():
-    light = type('LightSource', (object,), {})()
-    light_on(light, 'COM4')
-    capture_sequence()
-    # cam.Connect()
-    # cam.Scan()
-    # cam.Snap()
-    # cam.Cycle()
-    # cam.Read()
-    light_off(light)
+    robot = Robot(robot_model="Fanuc", host="192.168.1.100", port=18735)
+    robot.connect()
+    robot_move_p1(robot)
+    for robot_l in 1, 4:
+        for robot_p in 1, 4:
+            light = type('LightSource', (object,), {})()
+            light_on(light, 'COM4')
+            capture_sequence()
+            # cam.Connect()
+            # cam.Scan()
+            # cam.Snap()
+            # cam.Cycle()
+            # cam.Read()
+            light_off(light)
+            robot_move_next_p()
+        robot_move_next_l
+    robot.disconnect()
     
+"""機械手臂連接"""
+    
+def robot_move_p1(robot):
+    robot.move(
+        "pose",
+        vals=[126.0, 0.0, 126.0, 0.0, 0.0, 0.0],
+        linear=True
+    )
+
+def robot_move_next_p(robot):
+    robot.move(
+        "pose",
+        vals=[-84.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        linear=True
+    )
+    
+def robot_move_next_l(robot):
+    robot.move(
+        "pose",
+        vals=[252.0, 0.0, -84.0, 0.0, 0.0, 0.0],
+        linear=True
+    )
+
+
 """控制光源開啟"""
 def light_on(light, port):
     light.port = port
