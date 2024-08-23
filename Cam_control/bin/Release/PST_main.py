@@ -57,7 +57,8 @@ def robot_move_next_l(robot):
         "pose",
         vals=[252.0, 0.0, -84.0, 0.0, 0.0, 0.0] + robot_pos,
         linear=True
-    )
+    ) 
+    # 移到下一行
 
 
 """控制光源開啟"""
