@@ -14,7 +14,7 @@ light_windows = 0
 
 """拍攝流程：開燈 - 拍攝 - 關燈"""
 def main():
-    robot = Robot(robot_model="FANUC", host="192.168.1.100", port=18735)
+    robot = Robot(robot_model="Fanuc", host="192.168.1.100", port=18735)
     robot.connect()
     robot_move_p1(robot)
     for robot_l in range(1, 4):
@@ -36,23 +36,26 @@ def main():
 """機械手臂連接"""
     
 def robot_move_p1(robot):
+    robot_pos = robot.get_curpos()
     robot.move(
         "pose",
-        vals=[126.0, 0.0, 126.0, 0.0, 0.0, 0.0],
+        vals=[126.0, 0.0, 126.0, 0.0, 0.0, 0.0] + robot_pos,
         linear=True
     )
 
 def robot_move_next_p(robot):
+    robot_pos = robot.get_curpos()
     robot.move(
         "pose",
-        vals=[-84.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        vals=[-84.0, 0.0, 0.0, 0.0, 0.0, 0.0] + robot_pos,
         linear=True
     )
     
 def robot_move_next_l(robot):
+    robot_pos = robot.get_curpos()
     robot.move(
         "pose",
-        vals=[252.0, 0.0, -84.0, 0.0, 0.0, 0.0],
+        vals=[252.0, 0.0, -84.0, 0.0, 0.0, 0.0] + robot_pos,
         linear=True
     )
 
