@@ -9,14 +9,16 @@ dll_path = r"C:/Users/9288/Desktop/Cam_control/Cam_control/bin/Release/Cam_contr
 clr.AddReference(dll_path)
 from Cam_control import *
 cam = Cam_params() # type: ignore
+light_windows = 0
+
 
 """拍攝流程：開燈 - 拍攝 - 關燈"""
 def main():
-    robot = Robot(robot_model="Fanuc", host="192.168.1.100", port=18735)
+    robot = Robot(robot_model="FANUC", host="192.168.1.100", port=18735)
     robot.connect()
     robot_move_p1(robot)
-    for robot_l in 1, 4:
-        for robot_p in 1, 4:
+    for robot_l in range(1, 4):
+        for robot_p in range(1, 4):
             light = type('LightSource', (object,), {})()
             light_on(light, 'COM4')
             capture_sequence()
@@ -27,7 +29,8 @@ def main():
             # cam.Read()
             light_off(light)
             robot_move_next_p()
-        robot_move_next_l
+            light_windows += 1
+        robot_move_next_l()
     robot.disconnect()
     
 """機械手臂連接"""
@@ -118,7 +121,7 @@ def capture_sequence():
     
     for lineRate, exposureTime, gain, speed in zip(lineRate_seq, exposureTime_seq, gain_seq, speed_seq):
         with open(config_name, 'w') as config: # 寫一個config給cam_control讀
-            config.write(f"{lineRate}\n{exposureTime}\n{gain}")
+            config.write(f"{lineRate}\n{exposureTime}\n{gain}\n{light_windows}")
         
         # encoder.add_channel(1, 'pos')
         # encoder.add_channel(1, 'encoder.pos')

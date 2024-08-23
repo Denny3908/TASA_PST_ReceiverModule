@@ -21,6 +21,7 @@ namespace Cam_control
         private static double lineRate;
         private static double exposureTime;
         private static double gain;
+        private static int windows;
         
         private static string pixelFormat = "Mono12"; // 設定影像深度
         private static int height = 7997; // 設定影像高度
@@ -58,6 +59,7 @@ namespace Cam_control
             lineRate = double.Parse(configs[0]);
             exposureTime = double.Parse(configs[1]);
             gain = double.Parse(configs[2]);
+            windows = int.Parse(configs[3]);
 
             wait = (2 + (height / lineRate));
 
@@ -140,8 +142,10 @@ namespace Cam_control
             {
                 Console.WriteLine("No FFC.");
             }
-            
-            buffer.Save(imageSavedPath + lineRate + "Hz_" + exposureTime + "us_Gain" + gain + "_PST.tif", "-format tiff");
+
+            string PSTsavePath = imageSavedPath + windows + @"\";
+            Directory.CreateDirectory(PSTsavePath);
+            buffer.Save(PSTsavePath + lineRate + "Hz_" + exposureTime + "us_Gain" + gain + "_PST.tif", "-format tiff");
 
             Console.WriteLine("\nCapture completed");
             DestroysObjects();
